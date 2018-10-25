@@ -1,0 +1,15 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="local.OSBBInfoSrv">
+    <signal name="upTimeChanged">
+      <arg name="upTime" type="u" direction="out"/>
+    </signal>
+    <signal name="lastSyncDTChanged">
+      <arg name="lastSyncDT" type="((iii)(iiii)i)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QDateTime"/>
+    </signal>
+    <method name="getUpTime">
+      <arg type="u" direction="out"/>
+    </method>
+  </interface>
+</node>
