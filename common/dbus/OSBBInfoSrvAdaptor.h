@@ -42,6 +42,9 @@ class OSBBInfoSrvAdaptor: public QDBusAbstractAdaptor
 "    <method name=\"getUpTime\">\n"
 "      <arg direction=\"out\" type=\"u\"/>\n"
 "    </method>\n"
+"    <method name=\"process\">\n"
+"      <arg direction=\"out\" type=\"d\"/>\n"
+"    </method>\n"
 "  </interface>\n"
         "")
 public:
@@ -51,6 +54,7 @@ public:
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
     uint getUpTime();
+    double process();
 Q_SIGNALS: // SIGNALS
     void lastSyncDTChanged(const QDateTime &lastSyncDT);
     void upTimeChanged(uint upTime);

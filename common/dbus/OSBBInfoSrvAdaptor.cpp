@@ -41,3 +41,11 @@ uint OSBBInfoSrvAdaptor::getUpTime()
     return out0;
 }
 
+double OSBBInfoSrvAdaptor::process()
+{
+    // handle method call local.OSBBInfoSrv.process
+    double out0;
+    QMetaObject::invokeMethod(parent(), "process", Q_RETURN_ARG(double, out0));
+    return out0;
+}
+

@@ -11,5 +11,8 @@
     <method name="getUpTime">
       <arg type="u" direction="out"/>
     </method>
+    <method name="process">
+      <arg type="d" direction="out"/>
+    </method>
   </interface>
 </node>

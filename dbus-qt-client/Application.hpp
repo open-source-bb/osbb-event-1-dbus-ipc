@@ -21,12 +21,15 @@ public:
 private:
     bool initializeDBusClientOnSessionBus();
     bool initializeDBusClientOnSystemBus();
+    bool parseCmdLnArgs() override;
 
 private slots:
     void onServiceRegistered(const QString &);
     void onServiceUnregistered(const QString &);
     void onUpTimeChanged(const uint &);
     void onLastSyncDTChanged(const QDateTime &);
+
+    void processAsyncFinished(QDBusPendingCallWatcher *call);
 
     void onTimerTimeouted();
 

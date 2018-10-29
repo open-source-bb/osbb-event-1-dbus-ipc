@@ -42,6 +42,12 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QStringLiteral("getUpTime"), argumentList);
     }
 
+    inline QDBusPendingReply<double> process()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QStringLiteral("process"), argumentList);
+    }
+
 Q_SIGNALS: // SIGNALS
     void lastSyncDTChanged(const QDateTime &lastSyncDT);
     void upTimeChanged(uint upTime);

@@ -28,6 +28,7 @@ signals:
 // shared on the D-Bus
 public slots:
     uint getUpTime();
+    double process();
 
 // not shared on the D-Bus
 private slots:

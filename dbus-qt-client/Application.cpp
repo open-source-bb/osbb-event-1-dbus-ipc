@@ -63,6 +63,22 @@ bool Application::initializeDBusClientOnSessionBus()
 }
 
 
+bool Application::parseCmdLnArgs()
+{
+    bool result = false;
+
+    m_cmdLnParser.setApplicationDescription(QString("Client attaches to service: %1").arg(OSBBINFOSRV_SERVICE_NAME));
+
+    m_cmdLnParser.addOption(QCommandLineOption("callGetUpTime", "sync call dbus rpc getUpTime"));
+    m_cmdLnParser.addOption(QCommandLineOption("callProcess", "sync call dbus rpc process"));
+    m_cmdLnParser.addOption(QCommandLineOption("callProcessAsync", "async call dbus rpc process"));
+
+    result = ApplicationBase::parseCmdLnArgs();
+
+    return result;
+}
+
+
 void Application::onServiceRegistered(const QString &name)
 {
     LOG(QString("DBus service: %1 registered...").arg(name));
@@ -87,6 +103,20 @@ void Application::onLastSyncDTChanged(const QDateTime &ts)
 }
 
 
+void Application::processAsyncFinished(QDBusPendingCallWatcher *call)
+{
+    QDBusPendingReply<double> reply = *call;
+    if (reply.isError())
+    {
+        LOG(QString("processAsyncFinished result with error"));
+    } else {
+        auto result = reply.argumentAt<0>();
+        LOG(QString("processAsyncFinished result: %1").arg(result));
+    }
+    call->deleteLater();
+}
+
+
 void Application::onTimerTimeouted()
 {
     LOG(QString("onTimerTimeouted ts: %1").arg(QDateTime::currentDateTime().toString()));
@@ -103,8 +133,34 @@ void Application::run()
         return;
     }
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeouted()));
-//    timer->start(1000);
+    if (m_cmdLnParser.isSet("callGetUpTime"))
+    {
+        LOG(QString("callGetUpTime..."));
+        uint upTime = m_dbusServiceIfc->getUpTime();
+        LOG(QString("result: %1").arg(upTime));
+        quitApplication(0);
+    }
+
+    if (m_cmdLnParser.isSet("callProcess"))
+    {
+        LOG(QString("callProcess..."));
+        double time = m_dbusServiceIfc->process();
+        LOG(QString("result: %1").arg(time));
+        //quitApplication(0);
+    }
+
+    if (m_cmdLnParser.isSet("callProcessAsync"))
+    {
+        LOG(QString("callProcessAsync..."));
+
+        QDBusPendingCall async = m_dbusServiceIfc->asyncCall("process");
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(async, this);
+        QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(processAsyncFinished(QDBusPendingCallWatcher*)));
+
+        QTimer *timer = new QTimer(this);
+        QObject::connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeouted()));
+        timer->start(1000);
+    }
+
 }
 

@@ -47,5 +47,5 @@ ApplicationBase::~ApplicationBase()
 void ApplicationBase::quitApplication(int exitCode=EXIT_SUCCESS)
 {
     LOG(QString("ApplicationBase::quitApplication with exitCode: %1").arg(exitCode));
-//    ::exit(exitCode);
+    ::exit(exitCode);
 }

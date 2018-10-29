@@ -1,7 +1,7 @@
 #include "OSBBInfoSrv.hpp"
 
 #include <QTimer>
-
+#include <QThread>
 
 OSBBInfoSrv::OSBBInfoSrv():
     m_upTimeSec(0)
@@ -24,6 +24,16 @@ void OSBBInfoSrv::incrementSrvUpTime()
 uint OSBBInfoSrv::getUpTime()
 {
     return m_upTimeSec;
+}
+
+
+double OSBBInfoSrv::process()
+{
+    QTime timer;
+    timer.start();
+    QThread::sleep(10);
+    double time = timer.elapsed()/1000.0;
+    return time;
 }
 
 
